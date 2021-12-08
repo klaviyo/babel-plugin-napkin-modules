@@ -1,0 +1,31 @@
+{
+    "name": "babel-plugin-napkin-modules",
+    "version": "0.0.1",
+    "description": "Transforms import and require statements into ones with packages versions if specified (import x from 'y' -> import x from 'y-1.0.1' and require('y') -> require('y-1.0.1')",
+    "keywords": [
+        "babel",
+        "transform",
+        "import",
+        "modules"
+    ],
+    "main": "index.js",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/NapkinHQ/babel-plugin-napkin-modules.git"
+    },
+    "homepage": "https://github.com/NapkinHQ/babel-plugin-napkin-modules",
+    "scripts": {
+        "test": "mocha --require @babel/register"
+    },
+    "author": "Napkin Technologies, Inc.",
+    "license": "None",
+    "dependencies": {
+        "@babel/types": "^7.16.0"
+    },
+    "devDependencies": {
+        "@babel/core": "^7.16.0",
+        "@babel/preset-env": "^7.16.4",
+        "@babel/register": "^7.16.0",
+        "mocha": "^9.1.3"
+    }
+}
