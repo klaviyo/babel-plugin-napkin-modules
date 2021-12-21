@@ -1,7 +1,7 @@
 import { importDeclaration, stringLiteral, isStringLiteral, callExpression } from '@babel/types';
 
 function err(msg) {
-  throw new Error('babel-plugin-napkin-modules: ' + msg);
+  throw new Error('Napkin Modules: ' + msg);
 }
 
 function alreadyTransformed(modules, moduleName) {
@@ -16,7 +16,7 @@ function transformModule(modules, moduleName) {
     // otherwise append the version
     return `${moduleName}-${modules[moduleName]}`;
   } else {
-    err(`${moduleName} not found`);
+    err(`${moduleName} is not installed.`);
   }
 }
 
