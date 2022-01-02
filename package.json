@@ -1,6 +1,6 @@
 {
     "name": "babel-plugin-napkin-modules",
-    "version": "0.0.3",
+    "version": "0.0.4",
     "description": "Transforms import and require statements into ones with packages versions if specified (import x from 'y' -> import x from 'y-1.0.1' and require('y') -> require('y-1.0.1')",
     "keywords": [
         "babel",

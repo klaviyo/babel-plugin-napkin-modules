@@ -1,4 +1,5 @@
 import { importDeclaration, stringLiteral, isStringLiteral, callExpression } from '@babel/types';
+import { NODE14_BUILTIN_MODULES } from './constants';
 
 function err(msg) {
   throw new Error('Napkin Modules: ' + msg);
@@ -20,15 +21,35 @@ function transformModule(modules, moduleName) {
   }
 }
 
+function getModuleNameAndPath(value) {
+  if (!value) {
+    err('Empty import or require statement.');
+  }
+
+  const splitValue = value.split('/');
+
+  if (value.charAt(0) == '@') {
+    return {
+      moduleName: splitValue[0] + '/' + splitValue[1],
+      modulePath: splitValue.slice(2)
+    }
+  } else {
+    return {
+      moduleName: splitValue[0],
+      modulePath: splitValue.slice(1)
+    }
+  }
+}
+
 export default function () {
   return {
     visitor: {
       ImportDeclaration: function (path, state) {
         const specifiers = path.node.specifiers;
-        const moduleName = path.node.source.value;
-        const modules = state.opts.modules || {}; // passed in via plugin options -- an object of modules to versions, where '*' represents 'latest'
+        const { moduleName, modulePath } = getModuleNameAndPath(path.node.source.value);
+        const modules = Object.assign(state.opts.modules || {}, NODE14_BUILTIN_MODULES); // passed in via plugin options -- an object of modules to versions, where '*' represents 'latest'
         const newModuleName = alreadyTransformed(modules, moduleName) ? moduleName : transformModule(modules, moduleName);
-        const newImport = importDeclaration(specifiers, stringLiteral(newModuleName));
+        const newImport = importDeclaration(specifiers, stringLiteral([newModuleName, ...modulePath].join('/')));
         
         path.replaceWith(newImport);
         path.skip();
@@ -38,10 +59,10 @@ export default function () {
         const args = path.node.arguments || [];
         
         if (callee.name == 'require' && args.length == 1 && isStringLiteral(args[0])) {
-          const modules = state.opts.modules || {}; // passed in via plugin options -- an object of modules to versions, where '*' represents 'latest'
-          const moduleName = args[0].value;
+          const modules = Object.assign(state.opts.modules || {}, NODE14_BUILTIN_MODULES); // passed in via plugin options -- an object of modules to versions, where '*' represents 'latest'
+          const { moduleName, modulePath } = getModuleNameAndPath(args[0].value);
           const newModuleName = alreadyTransformed(modules, moduleName) ? moduleName : transformModule(modules, moduleName);
-          const newCallExpression = callExpression(callee, [stringLiteral(newModuleName)]);
+          const newCallExpression = callExpression(callee, [stringLiteral([newModuleName, ...modulePath].join('/'))]);
           
           path.replaceWith(newCallExpression);
           path.skip();
