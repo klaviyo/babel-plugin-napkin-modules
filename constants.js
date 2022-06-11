@@ -32,6 +32,7 @@ export const NODE14_BUILTIN_MODULES = {
     https: '*',
     inspector: '*',
     module: '*',
+    napkin: '*',
     net: '*',
     os: '*',
     path: '*',
