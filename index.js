@@ -1,5 +1,5 @@
 import { importDeclaration, stringLiteral, isStringLiteral, callExpression } from '@babel/types';
-import { NODE14_BUILTIN_MODULES } from './constants';
+import { NODE14_BUILTIN_MODULES } from './constants.js';
 
 function err(msg) {
   throw new Error('Napkin Modules: ' + msg);
