@@ -1,4 +1,4 @@
-export const NODE14_BUILTIN_MODULES = {
+export const NODE_BUILTIN_MODULES = {
     _http_agent: '*',
     _http_client: '*',
     _http_common: '*',
@@ -31,6 +31,7 @@ export const NODE14_BUILTIN_MODULES = {
     http2: '*',
     https: '*',
     inspector: '*',
+    klaviyo: '*',
     module: '*',
     napkin: '*',
     net: '*',
