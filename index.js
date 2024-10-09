@@ -2,7 +2,7 @@ import { importDeclaration, stringLiteral, isStringLiteral, callExpression } fro
 import { NODE_BUILTIN_MODULES } from './constants.js';
 
 function err(msg) {
-  throw new Error('Napkin Modules: ' + msg);
+  throw new Error('Modules: ' + msg);
 }
 
 function alreadyTransformed(modules, moduleName) {
