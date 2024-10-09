@@ -1,8 +1,8 @@
 import { importDeclaration, stringLiteral, isStringLiteral, callExpression } from '@babel/types';
-import { NODE14_BUILTIN_MODULES } from './constants.js';
+import { NODE_BUILTIN_MODULES } from './constants.js';
 
 function err(msg) {
-  throw new Error('Napkin Modules: ' + msg);
+  throw new Error('Modules: ' + msg);
 }
 
 function alreadyTransformed(modules, moduleName) {
@@ -11,6 +11,10 @@ function alreadyTransformed(modules, moduleName) {
 }
 
 function transformModule(modules, moduleName) {
+  if (moduleName === "klaviyo" && !modules['klaviyo-api']) {
+    err("`klaviyo` builtin module requires the `klaviyo-api` module to be added to the function.")
+  }
+  
   if (modules[moduleName] == '*') {
     return moduleName;
   } else if (modules[moduleName]) {
@@ -47,7 +51,7 @@ export default function () {
       ImportDeclaration: function (path, state) {
         const specifiers = path.node.specifiers;
         const { moduleName, modulePath } = getModuleNameAndPath(path.node.source.value);
-        const modules = Object.assign(state.opts.modules || {}, NODE14_BUILTIN_MODULES); // passed in via plugin options -- an object of modules to versions, where '*' represents 'latest'
+        const modules = Object.assign(state.opts.modules || {}, NODE_BUILTIN_MODULES); // passed in via plugin options -- an object of modules to versions, where '*' represents 'latest'
         const newModuleName = alreadyTransformed(modules, moduleName) ? moduleName : transformModule(modules, moduleName);
         const newImport = importDeclaration(specifiers, stringLiteral([newModuleName, ...modulePath].join('/')));
         
@@ -59,7 +63,7 @@ export default function () {
         const args = path.node.arguments || [];
         
         if (callee.name == 'require' && args.length == 1 && isStringLiteral(args[0])) {
-          const modules = Object.assign(state.opts.modules || {}, NODE14_BUILTIN_MODULES); // passed in via plugin options -- an object of modules to versions, where '*' represents 'latest'
+          const modules = Object.assign(state.opts.modules || {}, NODE_BUILTIN_MODULES); // passed in via plugin options -- an object of modules to versions, where '*' represents 'latest'
           const { moduleName, modulePath } = getModuleNameAndPath(args[0].value);
           const newModuleName = alreadyTransformed(modules, moduleName) ? moduleName : transformModule(modules, moduleName);
           const newCallExpression = callExpression(callee, [stringLiteral([newModuleName, ...modulePath].join('/'))]);
