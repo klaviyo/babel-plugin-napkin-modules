@@ -11,10 +11,6 @@ function alreadyTransformed(modules, moduleName) {
 }
 
 function transformModule(modules, moduleName) {
-  if (moduleName === "klaviyo" && !modules['klaviyo-api']) {
-    err("`klaviyo` builtin module requires the `klaviyo-api` module to be added to the function.")
-  }
-  
   if (modules[moduleName] == '*') {
     return moduleName;
   } else if (modules[moduleName]) {
